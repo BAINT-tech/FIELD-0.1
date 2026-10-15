@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10131c">
+<title>FIELD | Experimental Workspace</title>
+
+<style>
+:root {
+  --bg: #10131c;
+  --panel: #191e2b;
+  --panel2: #202737;
+  --text: #f0f3fa;
+  --muted: #98a4ba;
+  --accent: #8af0c5;
+  --border: #30394b;
+  --danger: #ff8585;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+}
+
+button, input, textarea, select {
+  font: inherit;
+}
+
+button {
+  border: 1px solid var(--border);
+  background: var(--panel2);
+  color: var(--text);
+  padding: 11px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+button.primary {
+  background: var(--accent);
+  color: #10231c;
+  border-color: var(--accent);
+  font-weight: bold;
+}
+
+button.danger {
+  color: var(--danger);
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 12px;
+  color: var(--text);
+  background: #111622;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  outline: none;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--accent);
+}
+
+textarea {
+  resize: vertical;
+}
+
+header {
+  padding: 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  background: rgba(16,19,28,0.96);
+  z-index: 5;
+}
+
+.brand {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 4px;
+}
+
+.brand span {
+  color: var(--accent);
+}
+
+.status {
+  font-size: 11px;
+  color: var(--accent);
+  border: 1px solid var(--border);
+  padding: 7px 9px;
+  border-radius: 20px;
+}
+
+nav {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  position: sticky;
+  top: 64px;
+  z-index: 4;
+}
+
+nav button {
+  white-space: nowrap;
+  padding: 10px 13px;
+}
+
+nav button.active {
+  background: var(--accent);
+  color: #10231c;
+  border-color: var(--accent);
+  font-weight: bold;
+}
+
+main {
+  max-width: 1050px;
+  margin: auto;
+  padding: 20px 15px 50px;
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+h1 {
+  font-size: clamp(27px, 6vw, 43px);
+  margin: 10px 0;
+  line-height: 1.15;
+}
+
+h2 {
+  font-size: 21px;
+}
+
+h3 {
+  font-size: 16px;
+}
+
+p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.eyebrow {
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.hero {
+  padding: 30px 0 25px;
+}
+
+.hero p {
+  max-width: 580px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 12px;
+  margin: 22px 0;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 17px;
+  border-radius: 15px;
+}
+
+.card.clickable {
+  cursor: pointer;
+}
+
+.card.clickable:active {
+  border-color: var(--accent);
+}
+
+.icon {
+  font-size: 26px;
+  margin-bottom: 12px;
+}
+
+.card h3 {
+  margin: 0 0 8px;
+}
+
+.card p {
+  font-size: 13px;
+  margin-bottom: 0;
+}
+
+.section {
+  margin-top: 26px;
+}
+
+.row {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.row > input {
+  flex: 1;
+  min-width: 130px;
+}
+
+.row button {
+  flex-shrink: 0;
+}
+
+.field {
+  margin: 14px 0;
+}
+
+.field label {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.editor {
+  min-height: 210px;
+  font-family: monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  tab-size: 2;
+}
+
+#preview {
+  width: 100%;
+  height: 340px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: white;
+}
+
+.small {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.result {
+  background: #0c1018;
+  border: 1px solid var(--border);
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 15px;
+}
+
+.result strong {
+  color: var(--accent);
+}
+
+.led {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #303746;
+  border: 3px solid #586174;
+  margin: 20px auto;
+}
+
+.led.on {
+  background: #75ffb0;
+  border-color: #b4ffd4;
+  box-shadow: 0 0 28px #75ffb0;
+}
+
+.gauge {
+  height: 12px;
+  background: #303746;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 12px 0;
+}
+
+.gauge div {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  transition: width 0.2s;
+}
+
+.project {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+  flex-wrap: wrap;
+}
+
+.project-info {
+  flex: 1;
+  min-width: 120px;
+}
+
+.project-info strong {
+  overflow-wrap: anywhere;
+}
+
+.notice {
+  border-left: 3px solid var(--accent);
+  padding: 10px 13px;
+  background: #18251f;
+  border-radius: 0 9px 9px 0;
+  color: #c5e7d8;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+footer {
+  border-top: 1px solid var(--border);
+  padding: 20px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media (min-width: 700px) {
+  .two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">F<span>I</span>ELD</div>
+  <div class="status">EXPERIMENTAL WORKSPACE</div>
+</header>
+
+<nav id="navigation">
+  <button class="active" data-page="home">Home</button>
+  <button data-page="browser">Browser</button>
+  <button data-page="lab">Experiment Lab</button>
+  <button data-page="simulation">Simulation</button>
+  <button data-page="devices">Device Lab</button>
+  <button data-page="projects">Projects</button>
+</nav>
+
+<main>
+
+<section class="page active" id="home">
+  <div class="hero">
+    <div class="eyebrow">Your workspace, your experiments</div>
+    <h1>Explore what you can build</h1>
+    <p>A personal environment for exploring the web, writing code, testing ideas and experimenting with technology</p>
+    <div class="row">
+      <button class="primary" onclick="showPage('lab')">Start experimenting</button>
+      <button onclick="showPage('simulation')">Open simulator</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card clickable" onclick="showPage('browser')">
+      <div class="icon">🌐</div>
+      <h3>Browser</h3>
+      <p>Open websites and manage saved links</p>
+    </div>
+
+    <div class="card clickable" onclick="showPage('lab')">
+      <div class="icon">🧪</div>
+      <h3>Experiment Lab</h3>
+      <p>Write and run your own web experiments</p>
+    </div>
+
+    <div class="card clickable" onclick="showPage('simulation')">
+      <div class="icon">⚡</div>
+      <h3>Simulation</h3>
+      <p>Test a virtual LED circuit and sensor</p>
+    </div>
+
+    <div class="card clickable" onclick="showPage('devices')">
+      <div class="icon">🔌</div>
+      <h3>Device Lab</h3>
+      <p>Explore future hardware experiments</p>
+    </div>
+
+    <div class="card clickable" onclick="showPage('projects')">
+      <div class="icon">💾</div>
+      <h3>Projects</h3>
+      <p>Save and reopen your experiments</p>
+    </div>
+  </div>
+
+  <div class="section card">
+    <div class="eyebrow">Workspace status</div>
+    <h2>Your experiments stay on your device</h2>
+    <p id="homeStorage">Checking local storage</p>
+    <p class="small">Saved projects use this browser's local storage. Clearing the browser's site data may erase them, so export backups for important work.</p>
+  </div>
+</section>
+
+<section class="page" id="browser">
+  <div class="eyebrow">Web access</div>
+  <h1>Browser</h1>
+  <p>Enter a website address to open it in a new browser tab</p>
+
+  <div class="card">
+    <form id="browserForm" class="row">
+      <input id="websiteAddress" type="text" placeholder="example.com" autocomplete="url">
+      <button class="primary" type="submit">Open website</button>
+    </form>
+
+    <div class="section">
+      <h3>Quick access</h3>
+      <div class="grid">
+        <button onclick="openWebsite('https://www.google.com')">Google</button>
+        <button onclick="openWebsite('https://www.wikipedia.org')">Wikipedia</button>
+        <button onclick="openWebsite('https://github.com')">GitHub</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section card">
+    <h2>Saved links</h2>
+    <form id="saveLinkForm">
+      <div class="field">
+        <label for="linkName">Link name</label>
+        <input id="linkName" placeholder="My research website" required>
+      </div>
+      <div class="field">
+        <label for="linkUrl">Website address</label>
+        <input id="linkUrl" placeholder="https://example.com" required>
+      </div>
+      <button class="primary" type="submit">Save link</button>
+    </form>
+    <div id="savedLinks" class="section"></div>
+  </div>
+
+  <div class="notice section">
+    FIELD opens websites through your existing browser. It does not yet contain its own full browser engine. Some websites may block embedded viewing, and opening them requires internet access.
+  </div>
+</section>
+
+<section class="page" id="lab">
+  <div class="eyebrow">Build and test</div>
+  <h1>Experiment Lab</h1>
+  <p>Create a small web experiment and run it in an isolated preview</p>
+
+  <div class="card">
+    <div class="field">
+      <label for="projectName">Experiment name</label>
+      <input id="projectName" value="My first experiment">
+    </div>
+
+    <div class="field">
+      <label for="htmlCode">HTML</label>
+      <textarea id="htmlCode" class="editor" spellcheck="false"><div class="experiment">
+  <h1>Hello, FIELD!</h1>
+  <p>My first experiment is running</p>
+  <button id="testButton">Test interaction</button>
+  <p id="message"></p>
+</div></textarea>
+    </div>
+
+    <div class="field">
+      <label for="cssCode">CSS</label>
+      <textarea id="cssCode" class="editor" spellcheck="false">body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background: #f0f5f2;
+}
+
+.experiment {
+  padding: 20px;
+  border-radius: 16px;
+  background: white;
+}
+
+h1 {
+  color: #087b55;
+}
+
+button {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #087b55;
+  color: white;
+}</textarea>
+    </div>
+
+    <div class="field">
+      <label for="jsCode">JavaScript</label>
+      <textarea id="jsCode" class="editor" spellcheck="false">document.getElementById("testButton").addEventListener("click", function() {
+  document.getElementById("message").textContent =
+    "It works! You have successfully tested an interaction";
+});</textarea>
+    </div>
+
+    <div class="row">
+      <button class="primary" id="runCode">Run experiment</button>
+      <button id="saveProject">Save project</button>
+      <button id="exportHtml">Export HTML</button>
+      <button id="resetEditor">Reset example</button>
+    </div>
+    <p class="small">The preview runs in a sandboxed frame. Do not run code you do not trust. This is a learning environment, not a complete security sandbox.</p>
+  </div>
+
+  <div class="section">
+    <h2>Live preview</h2>
+    <iframe id="preview" title="Experiment preview" sandbox="allow-scripts"></iframe>
+  </div>
+</section>
+
+<section class="page" id="simulation">
+  <div class="eyebrow">Virtual hardware</div>
+  <h1>Simulation Lab</h1>
+  <p>Change the controls and observe how a simple simulated circuit responds</p>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Power supply</h3>
+      <p>Virtual supply voltage</p>
+      <div class="row">
+        <input id="voltage" type="range" min="0" max="12" value="5" step="0.5">
+        <strong id="voltageValue">5 V</strong>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Resistance</h3>
+      <p>Current limiting resistor</p>
+      <div class="row">
+        <input id="resistance" type="range" min="100" max="2000" value="330" step="10">
+        <strong id="resistanceValue">330 Ω</strong>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Circuit switch</h3>
+      <p>Connect or disconnect the virtual circuit</p>
+      <button class="primary" id="circuitSwitch">Switch ON</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Virtual circuit</h2>
+    <div id="led" class="led"></div>
+    <p id="circuitState" style="text-align:center">Circuit disconnected</p>
+
+    <div class="result">
+      <p>Estimated current</p>
+      <h2 id="currentValue">0 mA</h2>
+      <p>Estimated resistor power</p>
+      <h2 id="powerValue">0 W</h2>
+    </div>
+  </div>
+
+  <div class="section card">
+    <h2>Sensor simulator</h2>
+    <p>Move the slider to simulate a sensor reading</p>
+    <div class="row">
+      <input id="sensorInput" type="range" min="0" max="100" value="35">
+      <strong id="sensorValue">35%</strong>
+    </div>
+    <div class="gauge"><div id="sensorGauge"></div></div>
+    <p id="sensorMessage">Sensor reading is in the normal range</p>
+  </div>
+
+  <div class="notice section">
+    These are mathematical simulations, not measurements from real electronic components. Real circuits require appropriate components and safe wiring.
+  </div>
+</section>
+
+<section class="page" id="devices">
+  <div class="eyebrow">Hardware exploration</div>
+  <h1>Device Lab</h1>
+  <p>A starting point for experiments that may eventually connect software to physical devices</p>
+
+  <div class="grid">
+    <div class="card">
+      <div class="icon">📡</div>
+      <h3>Bluetooth LE</h3>
+      <p>Explore compatible wireless sensors and devices</p>
+      <button onclick="showDeviceInfo('Bluetooth Low Energy')">Explore</button>
+    </div>
+
+    <div class="card">
+      <div class="icon">🔗</div>
+      <h3>USB Serial</h3>
+      <p>Explore communication with compatible microcontrollers</p>
+      <button onclick="showDeviceInfo('USB Serial')">Explore</button>
+    </div>
+
+    <div class="card">
+      <div class="icon">🧠</div>
+      <h3>Device Ideas</h3>
+      <p>Record an idea for a future hardware experiment</p>
+      <button onclick="showDeviceInfo('Device Ideas')">Explore</button>
+    </div>
+  </div>
+
+  <div id="deviceDetails" class="card section">
+    <h2>Ready for exploration</h2>
+    <p>Select an area above to learn what is required for a real experiment</p>
+  </div>
+
+  <div class="section card">
+    <h2>Hardware experiment notes</h2>
+    <textarea id="deviceNotes" rows="5" placeholder="What device do you want to experiment with? What should it do?"></textarea>
+    <div class="row section">
+      <button class="primary" id="saveNotes">Save notes</button>
+      <span id="notesStatus" class="small"></span>
+    </div>
+  </div>
+
+  <div class="notice section">
+    FIELD does not currently connect to physical hardware. Browser-based device access depends on browser support, device compatibility, permissions and connection method. A native Android version may be needed for broader hardware support.
+  </div>
+</section>
+
+<section class="page" id="projects">
+  <div class="eyebrow">Your workspace</div>
+  <h1>Projects</h1>
+  <p>Experiments saved in this browser on this device</p>
+
+  <div class="card">
+    <div class="row">
+      <button class="primary" onclick="showPage('lab')">Create experiment</button>
+      <button id="exportBackup">Export backup</button>
+      <button id="importBackup">Import backup</button>
+      <input id="backupFile" type="file" accept=".json,application/json" hidden>
+    </div>
+    <div id="projectList" class="section"></div>
+  </div>
+
+  <div class="section card">
+    <h3>Storage information</h3>
+    <p id="storageInfo">Checking storage</p>
+    <p class="small">Export backups regularly. Browser storage can be removed if you clear site data or uninstall the browser.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  FIELD 0.1 · Independent experimental workspace
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+
+const STORAGE_KEY = "field_workspace_v01";
+
+let circuitOn = false;
+
+function getData() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : {
+      projects: [],
+      links: [],
+      notes: ""
+    };
+  } catch (error) {
+    return {
+      projects: [],
+      links: [],
+      notes: ""
+    };
+  }
+}
+
+function setData(data) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    updateStorageInfo();
+    return true;
+  } catch (error) {
+    alert("Storage failed. Your browser may be out of space or storage may be disabled.");
+    return false;
+  }
+}
+
+function showPage(page) {
+  document.querySelectorAll(".page").forEach(section => {
+    section.classList.toggle("active", section.id === page);
+  });
+
+  document.querySelectorAll("#navigation button").forEach(button => {
+    button.classList.toggle("active", button.dataset.page === page);
+  });
+
+  if (page === "projects") renderProjects();
+  if (page === "browser") renderLinks();
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.querySelectorAll("#navigation button").forEach(button => {
+  button.addEventListener("click", () => showPage(button.dataset.page));
+});
+
+function normaliseUrl(value) {
+  let address = value.trim();
+
+  if (!address) return null;
+
+  if (!/^https?:\/\//i.test(address)) {
+    address = "https://" + address;
+  }
+
+  try {
+    const parsed = new URL(address);
+
+    if (!["http:", "https:"].includes(parsed.protocol)) {
+      return null;
+    }
+
+    return parsed.href;
+  } catch (error) {
+    return null;
+  }
+}
+
+function openWebsite(address) {
+  const url = normaliseUrl(address);
+
+  if (!url) {
+    alert("Enter a valid website address");
+    return;
+  }
+
+  const opened = window.open(url, "_blank");
+
+  if (!opened) {
+    alert("Your browser blocked the new tab. Allow popups or open FIELD in a regular browser tab");
+  }
+}
+
+$("browserForm").addEventListener("submit", event => {
+  event.preventDefault();
+  openWebsite($("websiteAddress").value);
+});
+
+$("saveLinkForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const name = $("linkName").value.trim();
+  const url = normaliseUrl($("linkUrl").value);
+
+  if (!name || !url) {
+    alert("Enter a link name and a valid website address");
+    return;
+  }
+
+  const data = getData();
+
+  data.links.push({
+    id: Date.now(),
+    name,
+    url
+  });
+
+  if (setData(data)) {
+    $("linkName").value = "";
+    $("linkUrl").value = "";
+    renderLinks();
+  }
+});
+
+function renderLinks() {
+  const data = getData();
+  const container = $("savedLinks");
+
+  container.innerHTML = "";
+
+  if (!data.links.length) {
+    container.innerHTML = '<p class="small">No saved links yet</p>';
+    return;
+  }
+
+  data.links.forEach(link => {
+    const row = document.createElement("div");
+    row.className = "project card";
+
+    const info = document.createElement("div");
+    info.className = "project-info";
+
+    const title = document.createElement("strong");
+    title.textContent = link.name;
+
+    const url = document.createElement("p");
+    url.textContent = link.url;
+
+    info.append(title, url);
+
+    const open = document.createElement("button");
+    open.textContent = "Open";
+    open.addEventListener("click", () => openWebsite(link.url));
+
+    const remove = document.createElement("button");
+    remove.textContent = "Delete";
+    remove.className = "danger";
+
+    remove.addEventListener("click", () => {
+      const latest = getData();
+      latest.links = latest.links.filter(item => item.id !== link.id);
+
+      if (setData(latest)) renderLinks();
+    });
+
+    row.append(info, open, remove);
+    container.appendChild(row);
+  });
+}
+
+function buildDocument() {
+  const css = $("cssCode").value;
+  const html = $("htmlCode").value;
+  const js = $("jsCode").value;
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>${css.replace(/<\/style/gi, "<\\/style")}</style>
+</head>
+<body>
+${html.replace(/<\/body/gi, "<\\/body")}
+<script>
+try {
+${js.replace(/<\/script/gi, "<\\/script")}
+} catch (error) {
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    "<pre>JavaScript error: " + String(error) + "</pre>"
+  );
+}
+<\/script>
+</body>
+</html>`;
+}
+
+function runExperiment() {
+  $("preview").srcdoc = buildDocument();
+}
+
+$("runCode").addEventListener("click", runExperiment);
+
+function saveProject() {
+  const name = $("projectName").value.trim() || "Untitled experiment";
+  const data = getData();
+
+  const project = {
+    id: Date.now(),
+    name,
+    html: $("htmlCode").value,
+    css: $("cssCode").value,
+    js: $("jsCode").value,
+    updated: new Date().toISOString()
+  };
+
+  const existing = data.projects.findIndex(item => item.name === name);
+
+  if (existing >= 0) {
+    project.id = data.projects[existing].id;
+    data.projects[existing] = project;
+  } else {
+    data.projects.push(project);
+  }
+
+  if (setData(data)) {
+    alert("Project saved on this device");
+    renderProjects();
+  }
+}
+
+$("saveProject").addEventListener("click", saveProject);
+
+function loadProject(project) {
+  $("projectName").value = project.name;
+  $("htmlCode").value = project.html;
+  $("cssCode").value = project.css;
+  $("jsCode").value = project.js;
+
+  showPage("lab");
+  runExperiment();
+}
+
+function renderProjects() {
+  const data = getData();
+  const container = $("projectList");
+
+  container.innerHTML = "";
+
+  if (!data.projects.length) {
+    container.innerHTML = '<p class="small">No projects saved yet. Create your first experiment in the Experiment Lab</p>';
+    return;
+  }
+
+  data.projects.slice().reverse().forEach(project => {
+    const row = document.createElement("div");
+    row.className = "project card";
+
+    const info = document.createElement("div");
+    info.className = "project-info";
+
+    const title = document.createElement("strong");
+    title.textContent = project.name;
+
+    const date = document.createElement("p");
+    date.textContent = project.updated
+      ? new Date(project.updated).toLocaleString()
+      : "Saved project";
+
+    info.append(title, date);
+
+    const open = document.createElement("button");
+    open.textContent = "Open";
+    open.className = "primary";
+    open.addEventListener("click", () => loadProject(project));
+
+    const exportButton = document.createElement("button");
+    exportButton.textContent = "Export";
+    exportButton.addEventListener("click", () => {
+      downloadFile(
+        safeFilename(project.name) + ".html",
+        makeProjectDocument(project),
+        "text/html"
+      );
+    });
+
+    const remove = document.createElement("button");
+    remove.textContent = "Delete";
+    remove.className = "danger";
+
+    remove.addEventListener("click", () => {
+      if (!confirm("Delete this project?")) return;
+
+      const latest = getData();
+      latest.projects = latest.projects.filter(item => item.id !== project.id);
+
+      if (setData(latest)) renderProjects();
+    });
+
+    row.append(info, open, exportButton, remove);
+    container.appendChild(row);
+  });
+}
+
+function makeProjectDocument(project) {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${escapeHtml(project.name)}</title>
+<style>${project.css.replace(/<\/style/gi, "<\\/style")}</style>
+</head>
+<body>
+${project.html.replace(/<\/body/gi, "<\\/body")}
+<script>
+${project.js.replace(/<\/script/gi, "<\\/script")}
+<\/script>
+</body>
+</html>`;
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function safeFilename(value) {
+  return value.replace(/[^a-z0-9_-]/gi, "_").slice(0, 70) || "field-project";
+}
+
+function downloadFile(filename, content, type) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+
+  anchor.href = url;
+  anchor.download = filename;
+
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+$("exportHtml").addEventListener("click", () => {
+  const name = safeFilename($("projectName").value || "field-experiment");
+
+  downloadFile(name + ".html", buildDocument(), "text/html");
+});
+
+$("resetEditor").addEventListener("click", () => {
+  if (!confirm("Replace your current editor contents with the starter example?")) return;
+
+  $("projectName").value = "My first experiment";
+
+  $("htmlCode").value = `<div class="experiment">
+  <h1>Hello, FIELD!</h1>
+  <p>My first experiment is running</p>
+  <button id="testButton">Test interaction</button>
+  <p id="message"></p>
+</div>`;
+
+  $("cssCode").value = `body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background: #f0f5f2;
+}
+
+.experiment {
+  padding: 20px;
+  border-radius: 16px;
+  background: white;
+}
+
+h1 {
+  color: #087b55;
+}`;
+
+  $("jsCode").value = `document.getElementById("testButton").addEventListener("click", function() {
+  document.getElementById("message").textContent = "It works!";
+});`;
+
+  runExperiment();
+});
+
+function updateCircuit() {
+  const voltage = Number($("voltage").value);
+  const resistance = Number($("resistance").value);
+
+  $("voltageValue").textContent = voltage + " V";
+  $("resistanceValue").textContent = resistance + " Ω";
+
+  const ledVoltage = 2;
+  const current = circuitOn && voltage > ledVoltage
+    ? (voltage - ledVoltage) / resistance
+    : 0;
+
+  const milliamps = current * 1000;
+  const power = current * current * resistance;
+
+  $("currentValue").textContent = milliamps.toFixed(2) + " mA";
+  $("powerValue").textContent = power.toFixed(3) + " W";
+
+  const ledWorks = circuitOn && voltage >= ledVoltage;
+
+  $("led").classList.toggle("on", ledWorks);
+
+  $("circuitState").textContent = !circuitOn
+    ? "Circuit disconnected"
+    : voltage < ledVoltage
+      ? "Supply voltage is too low for this LED model"
+      : milliamps > 25
+        ? "LED model may be overloaded"
+        : "Circuit connected";
+}
+
+$("voltage").addEventListener("input", updateCircuit);
+$("resistance").addEventListener("input", updateCircuit);
+
+$("circuitSwitch").addEventListener("click", () => {
+  circuitOn = !circuitOn;
+  $("circuitSwitch").textContent = circuitOn ? "Switch OFF" : "Switch ON";
+  updateCircuit();
+});
+
+function updateSensor() {
+  const value = Number($("sensorInput").value);
+
+  $("sensorValue").textContent = value + "%";
+  $("sensorGauge").style.width = value + "%";
+
+  $("sensorMessage").textContent = value < 30
+    ? "Sensor reading is low"
+    : value < 70
+      ? "Sensor reading is in the normal range"
+      : "Sensor reading is high";
+}
+
+$("sensorInput").addEventListener("input", updateSensor);
+
+function showDeviceInfo(type) {
+  const details = {
+    "Bluetooth Low Energy": {
+      title: "Bluetooth Low Energy",
+      text: "BLE can connect compatible phones to supported wireless sensors. Web Bluetooth support varies by browser and device. A real connection requires a compatible device, user permission and supported browser APIs."
+    },
+    "USB Serial": {
+      title: "USB Serial Communication",
+      text: "Compatible microcontrollers can communicate over USB serial. This normally requires supported browser APIs, a compatible cable or adapter, device permission and suitable firmware. Some Android configurations need a native application."
+    },
+    "Device Ideas": {
+      title: "Turn an idea into an experiment",
+      text: "Write down the device you want to build, what it should sense or control, the parts you expect to need and how you will test it safely. FIELD can keep your notes while we develop more tools."
+    }
+  };
+
+  const item = details[type];
+
+  $("deviceDetails").innerHTML = "";
+
+  const title = document.createElement("h2");
+  title.textContent = item.title;
+
+  const paragraph = document.createElement("p");
+  paragraph.textContent = item.text;
+
+  $("deviceDetails").append(title, paragraph);
+}
+
+$("saveNotes").addEventListener("click", () => {
+  const data = getData();
+  data.notes = $("deviceNotes").value;
+
+  if (setData(data)) {
+    $("notesStatus").textContent = "Notes saved on this device";
+  }
+});
+
+function exportBackup() {
+  const data = getData();
+
+  downloadFile(
+    "field-backup.json",
+    JSON.stringify(data, null, 2),
+    "application/json"
+  );
+}
+
+$("exportBackup").addEventListener("click", exportBackup);
+
+$("importBackup").addEventListener("click", () => {
+  $("backupFile").click();
+});
+
+$("backupFile").addEventListener("change", async event => {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  try {
+    const imported = JSON.parse(await file.text());
+
+    if (
+      !imported ||
+      !Array.isArray(imported.projects) ||
+      !Array.isArray(imported.links)
+    ) {
+      throw new Error("Invalid backup");
+    }
+
+    if (!confirm("Replace your current FIELD data with the imported backup? Export your current data first if you need it")) {
+      event.target.value = "";
+      return;
+    }
+
+    const safeData = {
+      projects: imported.projects,
+      links: imported.links,
+      notes: typeof imported.notes === "string" ? imported.notes : ""
+    };
+
+    if (setData(safeData)) {
+      $("deviceNotes").value = safeData.notes;
+      renderProjects();
+      renderLinks();
+      alert("Backup imported successfully");
+    }
+  } catch (error) {
+    alert("Could not import this backup. Check that it is a valid FIELD backup file");
+  }
+
+  event.target.value = "";
+});
+
+function updateStorageInfo() {
+  const data = getData();
+  const projectCount = data.projects.length;
+  const linkCount = data.links.length;
+
+  $("homeStorage").textContent =
+    projectCount + " saved projects and " + linkCount + " saved links";
+
+  $("storageInfo").textContent =
+    projectCount + " projects and " + linkCount + " links are stored in this browser";
+}
+
+function initialise() {
+  const data = getData();
+
+  $("deviceNotes").value = data.notes || "";
+
+  renderLinks();
+  renderProjects();
+  updateStorageInfo();
+  updateCircuit();
+  updateSensor();
+  runExperiment();
+}
+
+initialise();
+</script>
+
+</body>
+</html>
